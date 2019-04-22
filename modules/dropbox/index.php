@@ -48,7 +48,7 @@ $action->record('MODULE_ID_DROPBOX');
 $tool_content .="
 <div id=\"operations_container\">
   <ul id=\"opslist\">
-    <li><a href=\"".$_SERVER['PHP_SELF']."?upload=1\">".$dropbox_lang['uploadFile']."</a></li>
+    <li><a href=\"".htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?upload=1\">".$dropbox_lang['uploadFile']."</a></li>
   </ul>
 </div>";
 
