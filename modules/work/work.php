@@ -253,6 +253,8 @@ function submit_work($id) {
 	global $tool_content, $workPath, $uid, $stud_comments, $group_sub, $REMOTE_ADDR, $langUploadSuccess,
 	$langBack, $langWorks, $langUploadError, $currentCourseID, $langExerciseNotPermit, $langUnwantedFiletype;
 
+	$stud_comments = htmlspecialchars($stud_comments, ENT_QUOTES, 'UTF-8');
+
 	//DUKE Work submission bug fix.
 	//Do not allow work submission if:
 	//	> after work deadline
