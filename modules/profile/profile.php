@@ -50,29 +50,29 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 
 	// check if there are empty fields
 	if (empty($nom_form) OR empty($prenom_form) OR empty($username_form)) {
-		header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=4");
+		header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=4");
 		exit();
 	}
 
 	elseif (empty($email_form) and check_prof()) {
-		header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=4");
+		header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=4");
 		exit();
 	}
 
 	elseif (strstr($username_form, "'") or strstr($username_form, '"') or strstr($username_form, '\\')){
-		header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=10");
+		header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=10");
 		exit();
 	}
 
 	// check if username is free
 	elseif(isset($user_exist) AND ($username_form==$user_exist) AND ($username_form!=$uname)) {
-		header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=5");
+		header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=5");
 		exit();
 	}
 
 	// check if email is valid
 	elseif (!email_seems_valid($email_form) and check_prof()) {
-		header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=6");
+		header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=6");
 		exit();
 	}
 
@@ -91,7 +91,7 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 			if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
                 		unset($_SESSION['user_perso_active']);
 			}
-			header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=1");
+			header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=1");
 			exit();
 	        }
 	}
@@ -109,7 +109,7 @@ if (isset($submit) && isset($ldap_submit) && ($ldap_submit == "ON")) {
 		unset($_SESSION['user_perso_active']);
 	}
 
-	header("location:". htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')."?msg=1");
+	header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=1");
 	exit();
 }
 ##[END personalisation modification]############

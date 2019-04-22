@@ -214,7 +214,7 @@ if (isset($submit) && $submit) {
 		draw($tool_content, 2, 'phpbb', $head_content);
 		exit();
 	}
-	$tool_content .= "<form action='htmlspecialchars($_SERVER[PHP_SELF], ENT_QUOTES, 'UTF-8')' method='post'>
+	$tool_content .= "<form action='". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'). "' method='post'>
 	<table class='FormData' width='99%'>
 	<tbody>
 	<tr>
