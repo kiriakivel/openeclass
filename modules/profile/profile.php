@@ -29,6 +29,7 @@ $require_login = true;
 $helpTopic = 'Profile';
 include '../../include/baseTheme.php';
 include "../auth/auth.inc.php";
+require_once('../../include/csrf_token.php');
 $require_valid_uid = TRUE;
 $tool_content = "";
 
@@ -78,22 +79,27 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 
 	// everything is ok
 	else {
-		##[BEGIN personalisation modification]############
-		$_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
-		$langcode = langname_to_code($language);
+		if ( !empty( $_POST['csrf_token'] ) ) {
 
-		$username_form = escapeSimple($username_form);
-		if(mysql_query("UPDATE user
-	        SET nom='$nom_form', prenom='$prenom_form',
-	        username='$username_form', email='$email_form', am='$am_form',
-	            perso='$persoStatus', lang='$langcode'
-	        WHERE user_id='".$_SESSION["uid"]."'")) {
-			if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
-                		unset($_SESSION['user_perso_active']);
+		    if( checkToken( $_POST['csrf_token'], 'update_profile_form' ) ) {
+				##[BEGIN personalisation modification]############
+				$_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
+				$langcode = langname_to_code($language);
+
+				$username_form = escapeSimple($username_form);
+				if(mysql_query("UPDATE user
+			        SET nom='$nom_form', prenom='$prenom_form',
+			        username='$username_form', email='$email_form', am='$am_form',
+			            perso='$persoStatus', lang='$langcode'
+			        WHERE user_id='".$_SESSION["uid"]."'")) {
+					if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
+		                		unset($_SESSION['user_perso_active']);
+					}
+					header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=1");
+					exit();
+			        }
 			}
-			header("location:". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8')."?msg=1");
-			exit();
-	        }
+		}
 	}
 }	// if submit
 
@@ -302,7 +308,10 @@ if ((!isset($changePass)) || isset($_POST['submit'])) {
     </tr>
 	<tr>
       <th>&nbsp;</th>
-      <td><input type=\"Submit\" name=\"submit\" value=\"$langModify\"></td>
+      <td>
+      	<input type=\"Submit\" name=\"submit\" value=\"$langModify\">
+      	<input type=\"hidden\" name=\"csrf_token\" value=\"". generateToken('update_profile_form'). "\"/>
+      </td>
     </tr>
     </tbody>
     </table>
