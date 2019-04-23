@@ -651,7 +651,7 @@ function show_submission_form($id)
     <tr>
       <th>&nbsp;</th>
       <td>
-      	<input type=\"hidden\" name=\"csrf_token_work_submit\" value=\"$csrf_token\"/>
+      	<input type="hidden" name="csrf_token_work_submit" value="$csrf_token"/>
       	<input type="submit" value="${langSubmit}" name="work_submit" /><br />$langNotice3
       </td>
     </tr>
