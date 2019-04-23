@@ -42,6 +42,7 @@ $helpTopic = 'Work';
 
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
+require_once('../../include/csrf_token.php');
 
 $head_content = "
 <script type='text/javascript'>
@@ -237,13 +238,15 @@ function add_assignment($title, $comments, $desc, $deadline, $group_submissions)
 {
 	global $tool_content, $workPath;
 
-	$secret = uniqid("");
-	db_query("INSERT INTO assignments
-		(title, description, comments, deadline, submission_date, secret_directory,
-			group_submissions) VALUES
-		(".autoquote($title).", ".autoquote($desc).", ".autoquote($comments).", ".autoquote($deadline).", NOW(), '$secret',
-			".autoquote($group_submissions).")");
-	mkdir("$workPath/$secret",0777);
+	if (!empty( $_POST['csrf_token_new_assignment'] )	&& checkToken( $_POST['csrf_token_new_assignment'], 'new_assignment_form' )) { //check csrf-token
+		$secret = uniqid("");
+		db_query("INSERT INTO assignments
+			(title, description, comments, deadline, submission_date, secret_directory,
+				group_submissions) VALUES
+			(".autoquote($title).", ".autoquote($desc).", ".autoquote($comments).", ".autoquote($deadline).", NOW(), '$secret',
+				".autoquote($group_submissions).")");
+		mkdir("$workPath/$secret",0777);
+	}
 }
 
 
@@ -267,25 +270,27 @@ function submit_work($id) {
 	}
 
 	$submit_ok = FALSE; //Default do not allow submission
-	if(isset($uid) && $uid) { //check if loged-in
-		if ($GLOBALS['statut'] == 10) { //user is guest
-			$submit_ok = FALSE;
-		} else { //user NOT guest
-			if(isset($status) && isset($status[$_SESSION["dbname"]])) {
-				//user is registered to this lesson
-				$res = db_query("SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
-					FROM assignments WHERE id = '$id'");
-				$row = mysql_fetch_array($res);
-				if ($row['days'] < 0) {
-					$submit_ok = FALSE; //after assignment deadline
-				} else {
-					$submit_ok = TRUE; //before deadline
-				}
-			} else {
-				//user NOT registered to this lesson
+	if (!empty( $_POST['csrf_token_work_submit'] )	&& checkToken( $_POST['csrf_token_work_submit'], 'work_submit_form' )) { //check csrf-token
+		if(isset($uid) && $uid) { //check if loged-in
+			if ($GLOBALS['statut'] == 10) { //user is guest
 				$submit_ok = FALSE;
-			}
+			} else { //user NOT guest
+				if(isset($status) && isset($status[$_SESSION["dbname"]])) {
+					//user is registered to this lesson
+					$res = db_query("SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+						FROM assignments WHERE id = '$id'");
+					$row = mysql_fetch_array($res);
+					if ($row['days'] < 0) {
+						$submit_ok = FALSE; //after assignment deadline
+					} else {
+						$submit_ok = TRUE; //before deadline
+					}
+				} else {
+					//user NOT registered to this lesson
+					$submit_ok = FALSE;
+				}
 
+			}
 		}
 	} //checks for submission validity end here
 
@@ -397,7 +402,10 @@ function new_assignment()
     </tr>
     <tr>
       <th>&nbsp;</th>
-      <td><input type='submit' name='new_assign' value='$langAdd' /></td>
+      <td>
+      	<input type=\"hidden\" name=\"csrf_token_new_assignment\" value=\"". generateToken('new_assignment_form'). "\"/>
+      	<input type='submit' name='new_assign' value='$langAdd' />
+      </td>
     </tr>
     </tbody>
     </table>
@@ -511,7 +519,10 @@ cData;
     </tr>
     <tr>
       <th class='left'>&nbsp;</th>
-      <td><input type='submit' name='do_edit' value='$langEdit' /></td>
+      <td>
+      	<input type=\"hidden\" name=\"csrf_token_edit_assignment\" value=\"". generateToken('edit_assignment_form'). "\"/>
+      	<input type='submit' name='do_edit' value='$langEdit' />
+      </td>
     </tr>
     </tbody>
     </table>
@@ -531,12 +542,14 @@ function edit_assignment($id)
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $_POST['title']);
 
-	if (db_query("UPDATE assignments SET title=".autoquote($_POST['title']).",
-		description=".autoquote($_POST['desc']).", group_submissions=".autoquote($_POST['group_submissions']).",
-		comments=".autoquote($_POST['comments']).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
+	if ((!empty( $_POST['csrf_token_edit_assignment'] ) &&
+			checkToken( $_POST['csrf_token_edit_assignment'], 'edit_assignment_form' )) &&
+			(db_query("UPDATE assignments SET title=".autoquote($_POST['title']).",
+			description=".autoquote($_POST['desc']).", group_submissions=".autoquote($_POST['group_submissions']).",
+			comments=".autoquote($_POST['comments']).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'"))) {
 
         $title = autounquote($_POST['title']);
-	$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
+		$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
 	} else {
 	$tool_content .="<p class='caution_small'>$langEditError<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
 	}
@@ -615,6 +628,7 @@ function show_submission_form($id)
 		"<a href='../group/document.php?userGroupId=$gid'>".
 		"$m[group_documents]</a> $m[select_publish]</p>";
 	} else {
+		$csrf_token = generateToken('work_submit_form');
 		$tool_content .= <<<cData
 
     <form enctype="multipart/form-data" action="work.php" method="post">
@@ -636,7 +650,10 @@ function show_submission_form($id)
     </tr>
     <tr>
       <th>&nbsp;</th>
-      <td><input type="submit" value="${langSubmit}" name="work_submit" /><br />$langNotice3</td>
+      <td>
+      	<input type=\"hidden\" name=\"csrf_token_work_submit\" value=\"$csrf_token\"/>
+      	<input type="submit" value="${langSubmit}" name="work_submit" /><br />$langNotice3
+      </td>
     </tr>
     </tbody>
     </table>
@@ -954,7 +971,10 @@ cData;
     <tbody>
     <tr>
       <th class='left' width='220'>&nbsp;</th>
-      <td><input type='submit' name='submit_grades' value='${langGradeOk}'></td>
+      <td>
+      	<input type=\"hidden\" name=\"csrf_token_submit_grades\" value=\"". generateToken('submit_grades_form'). "\"/>
+      	<input type='submit' name='submit_grades' value='${langGradeOk}'>
+      </td>
     </tr>
     </tbody>
     </table>
@@ -1203,15 +1223,16 @@ function submit_grades($grades_id, $grades)
 	foreach ($grades as $sid => $grade) {
 		$val = mysql_fetch_row(db_query("SELECT grade from assignment_submit WHERE id = '$sid'"));
 		if ($val[0] != $grade) {
-			/*  If check expression is changed by nikos, in order to give to teacher
-			 * the ability to assign comments to a work without assigning grade. */
+			/* If check expression is changed by nikos, in order to give to teacher
+			 * the ability to assign comments to a work without assigning grade.
+			 */
 			if (!is_numeric($grade) && '' != $grade) {
         			$stupid_user = 1;
-                        }
+            }
 		}
 	}
 
-	if (!$stupid_user) {
+	if (!empty( $_POST['csrf_token_submit_grades'] ) && checkToken( $_POST['csrf_token_submit_grades'], 'submit_grades_form' ) && !$stupid_user) {
 		foreach ($grades as $sid => $grade) {
 			$val = mysql_fetch_row(db_query("SELECT grade from assignment_submit WHERE id = '$sid'"));
 			if ($val[0] != $grade) {

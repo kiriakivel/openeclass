@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * File that includes the two functions that are used to prevent csrf attacks
+ */
 
 /**
  * generate CSRF token
