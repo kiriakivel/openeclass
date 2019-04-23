@@ -37,7 +37,7 @@ $helpTopic = 'Profile';
 $require_valid_uid = TRUE;
 
 include '../../include/baseTheme.php';
-require_once('../../../include/csrf_token.php');
+require_once('../../include/csrf_token.php');
 
 $nameTools = $langChangePass;
 $navigation[]= array ("url"=>"../profile/profile.php", "name"=> $langModifProfile);
