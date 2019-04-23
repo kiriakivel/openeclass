@@ -32,6 +32,7 @@ $helpTopic = 'CreateCourse';
 
 include '../../include/baseTheme.php';
 require_once("../betacms_bridge/include/bcms.inc.php");
+require_once('../../include/csrf_token.php');
 
 $nameTools = $langCreateCourse . " (" . $langCreateCourseStep ." 1 " .$langCreateCourseStep2 . " 3)" ;
 $tool_content = $head_content = "";
@@ -71,7 +72,7 @@ hContent;
 
 $titulaire_probable="$prenom $nom";
 
-$tool_content .= "<form method='post' name='createform' action='$_SERVER[PHP_SELF]' onsubmit=\"return checkrequired(this, 'intitule', 'titulaires');\">";
+$tool_content .= "<form method='post' name='createform' action='". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'). "' onsubmit=\"return checkrequired(this, 'intitule', 'titulaires');\">";
 
 // Import from BetaCMS Bridge
 doImportFromBetaCMSBeforeCourseCreation();
@@ -154,7 +155,10 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])) {
 	$tool_content .= lang_select_options('languageCourse');
 	$tool_content .= "</td><td>&nbsp;</td></tr>
 	<tr><th>&nbsp;</th>
-	<td><input type='submit' name='create2' value='$langNextStep >' /><input type='hidden' name='visit' value='true' /></td>
+	<td>
+		<input type='submit' name='create2' value='$langNextStep >' />
+		<input type='hidden' name='visit' value='true' />
+	</td>
 	<td><p align='right'><small>(*) &nbsp;$langFieldsRequ</small></p></td>
 </tbody>
 </table><br />";
@@ -323,16 +327,19 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])) {
 	</tr>
 	<tr>
 	<th>&nbsp;</th>
-	<td width='400'><input type='submit' name='back2' value='< $langPreviousStep '>&nbsp;
-	<input type='submit' name='create_course' value=\"$langFinalize\"></td>
-	<td><p align='right'><small>$langFieldsOptionalNote</small></p></td>
+	<td width='400'>
+		<input type='hidden' name='csrf_token' value='". generateToken('create_course_form'). "'/>
+		<input type='submit' name='back2' value='< $langPreviousStep '>&nbsp;
+		<input type='submit' name='create_course' value=\"$langFinalize\"></td>
+	<td>
+	<p align='right'><small>$langFieldsOptionalNote</small></p></td>
 	</tr>
 	</tbody>
 	</table><br />";
 } // end of create3
 
-// create the course and the course database
-if (isset($_POST['create_course'])) {
+// check the csrf token and then create the course and the course database
+if (isset($_POST['create_course']) && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'create_course_form' )) {
 
         $nameTools = $langCourseCreate;
         $facid = intval($faculte);
