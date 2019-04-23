@@ -338,7 +338,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])) {
 	</table><br />";
 } // end of create3
 
-// check the csrf token and then create the course and the course database
+// check the csrf token, in the final step, and then create the course and the course database
 if (isset($_POST['create_course']) && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'create_course_form' )) {
 
         $nameTools = $langCourseCreate;

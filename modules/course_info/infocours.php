@@ -34,6 +34,7 @@ $require_prof = true;
 $require_help = TRUE;
 $helpTopic = 'Infocours';
 include '../../include/baseTheme.php';
+require_once('../../include/csrf_token.php');
 
 $nameTools = $langModifInfo;
 $tool_content = "";
@@ -56,7 +57,7 @@ $head_content = <<<hContent
 <script type="text/javascript" src="$urlAppend/include/xinha/my_config2.js"></script>
 hContent;
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'course_management_form' )) {
         if (empty($_POST['title'])) {
                 $tool_content .= "<p class='caution_small'>$langNoCourseTitle<br />
                                   <a href='$_SERVER[PHP_SELF]'>$langAgain</a></p><br />";
@@ -287,7 +288,10 @@ if (isset($_POST['submit'])) {
       </tr>
       <tr>
         <th class='left' width='150'>&nbsp;</th>
-        <td><input type='submit' name='submit' value='$langSubmit' /></td>
+        <td>
+          <input type='hidden' name='csrf_token' value='". generateToken('course_management_form'). "'/>
+          <input type='submit' name='submit' value='$langSubmit' />
+        </td>
         <td>&nbsp;</td>
       </tr>
       </tbody>
