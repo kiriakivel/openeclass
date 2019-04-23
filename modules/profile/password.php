@@ -170,7 +170,7 @@ if (!isset($changePass)) {
    <tr>
      <th width=\"150\" class='left'>$langNewPass2</th>
      <td><input class='FormData_InputText' type=\"password\" size=\"40\" name=\"password_form1\" value=\"\">
-         <input type=\"hidden\" name=\"csrf_token\" value=\"<?= generateToken('change_password_form')?>\"/>
+         <input type=\"hidden\" name=\"csrf_token\" value=\"". generateToken('change_password_form'). "\"/>
      </td>
     </tr>
 	<tr>
