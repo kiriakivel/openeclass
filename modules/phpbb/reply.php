@@ -58,6 +58,7 @@ $require_help = TRUE;
 $helpTopic = 'For';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
+require_once('../../include/csrf_token.php');
 
 $tool_content = "";
 $lang_editor = langname_to_code($language);
@@ -109,7 +110,7 @@ if (!does_exists($forum, $currentCourseID, "forum") || !does_exists($topic, $cur
 	exit();
 }
 
-if (isset($submit) && $submit) {
+if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'reply_form' )) {
 	if (trim($message) == '') {
 		$tool_content .= $langEmptyMsg;
 		draw($tool_content, 2, 'phpbb', $head_content);
@@ -217,6 +218,7 @@ if (isset($submit) && $submit) {
 	$tool_content .= "<table width=\"99%\"><tbody><tr>
 	<td class=\"success\">$langStored</td>
 	</tr></tbody></table>";
+
 } else {
 	// Private forum logic here.
 	if (($forum_type == 1) && !$user_logged_in && !$logging_in) {
@@ -307,6 +309,7 @@ if (isset($submit) && $submit) {
 	<input type='hidden' name='forum' value='$forum'>
 	<input type='hidden' name='topic' value='$topic'>
 	<input type='hidden' name='quote' value='$quote'>
+	<input type=\"hidden\" name=\"csrf_token\" value=\"". generateToken('reply_form'). "\"/>
 	<input type='submit' name='submit' value='$langSubmit'>&nbsp;
 	<input type='submit' name='cancel' value='$langCancelPost'>
 	</td>
