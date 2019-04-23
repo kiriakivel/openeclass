@@ -37,6 +37,7 @@ $helpTopic = 'Profile';
 $require_valid_uid = TRUE;
 
 include '../../include/baseTheme.php';
+require_once('../../../include/csrf_token.php');
 
 $nameTools = $langChangePass;
 $navigation[]= array ("url"=>"../profile/profile.php", "name"=> $langModifProfile);
@@ -71,24 +72,29 @@ if (isset($submit) && isset($changePass) && ($changePass == "do")) {
 		exit();
 	}
 
-	//all checks ok. Change password!
-	$sql = "SELECT `password` FROM `user` WHERE `user_id`=".$_SESSION["uid"]." ";
-	$result = db_query($sql, $mysqlMainDb);
-	$myrow = mysql_fetch_array($result);
+	if ( !empty( $_POST['csrf_token'] ) ) {
 
-	$old_pass = md5($_REQUEST['old_pass']) ;
-	$old_pass_db = $myrow['password'];
-	$new_pass = md5($_REQUEST['password_form']);
+	    if( checkToken( $_POST['csrf_token'], 'change_password_form' ) ) {
+			//all checks ok. Change password!
+			$sql = "SELECT `password` FROM `user` WHERE `user_id`=".$_SESSION["uid"]." ";
+			$result = db_query($sql, $mysqlMainDb);
+			$myrow = mysql_fetch_array($result);
 
-	if($old_pass == $old_pass_db) {
+			$old_pass = md5($_REQUEST['old_pass']) ;
+			$old_pass_db = $myrow['password'];
+			$new_pass = md5($_REQUEST['password_form']);
 
-		$sql = "UPDATE `user` SET `password` = '$new_pass' WHERE `user_id` = ".$_SESSION["uid"]."";
-		db_query($sql, $mysqlMainDb);
-		header("location:". $passurl."?msg=4");
-		exit();
-	} else {
-		header("location:". $passurl."?msg=5");
-		exit();
+			if($old_pass == $old_pass_db) {
+
+				$sql = "UPDATE `user` SET `password` = '$new_pass' WHERE `user_id` = ".$_SESSION["uid"]."";
+				db_query($sql, $mysqlMainDb);
+				header("location:". $passurl."?msg=4");
+				exit();
+			} else {
+				header("location:". $passurl."?msg=5");
+				exit();
+			}
+		}
 	}
 
 }
@@ -163,7 +169,9 @@ if (!isset($changePass)) {
    </tr>
    <tr>
      <th width=\"150\" class='left'>$langNewPass2</th>
-     <td><input class='FormData_InputText' type=\"password\" size=\"40\" name=\"password_form1\" value=\"\"></td>
+     <td><input class='FormData_InputText' type=\"password\" size=\"40\" name=\"password_form1\" value=\"\">
+         <input type=\"hidden\" name=\"csrf_token\" value=\"<?= generateToken('change_password_form')?>\"/>
+     </td>
     </tr>
 	<tr>
       <th>&nbsp;</th>
