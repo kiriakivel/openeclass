@@ -238,12 +238,12 @@ if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $
 	<tr>
 	<th>&nbsp;</th>
 	<td>
-		<input type='hidden' name='forum' value='$forum'>
+		<input type='hidden' name='forum' value='$forum' />
 		<input type=\"hidden\" name=\"csrf_token\" value=\"". generateToken('new_topic_form'). "\"/>
+		<input type='submit' name='submit' value='$langSubmit' />&nbsp;
+		<input type='submit' name='cancel' value='$langCancelPost' />
 	</td>
-	<input type='submit' name='submit' value='$langSubmit' />&nbsp;
-	<input type='submit' name='cancel' value='$langCancelPost' />
-	</td></tr>
+	</tr>
 	</tbody>
 	</table>
 	<br/>
