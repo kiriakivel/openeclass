@@ -60,6 +60,7 @@ $require_login = TRUE;
 $require_help = FALSE;
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
+require_once('../../include/csrf_token.php');
 $tool_content = "";
 $lang_editor = langname_to_code($language);
 $head_content = <<<hContent
@@ -101,7 +102,7 @@ if (!does_exists($forum, $currentCourseID, "forum")) {
 	$tool_content .= $langErrorPost;
 }
 
-if (isset($submit) && $submit) {
+if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'new_topic_form' )) {
 	$subject = strip_tags($subject);
 	if (trim($message) == '' || trim($subject) == '') {
 		$tool_content .= $langEmptyMsg;
@@ -236,7 +237,10 @@ if (isset($submit) && $submit) {
 	</tr>
 	<tr>
 	<th>&nbsp;</th>
-	<td><input type='hidden' name='forum' value='$forum' />
+	<td>
+		<input type='hidden' name='forum' value='$forum'>
+		<input type=\"hidden\" name=\"csrf_token\" value=\"". generateToken('new_topic_form'). "\"/>
+	</td>
 	<input type='submit' name='submit' value='$langSubmit' />&nbsp;
 	<input type='submit' name='cancel' value='$langCancelPost' />
 	</td></tr>
