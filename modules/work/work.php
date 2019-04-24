@@ -929,7 +929,7 @@ cData;
       <tr>
         <td align='right' width='4'>$i.</td>
         <td>${uid_2_name} $subContentGroup</td>
-        <td width="75" align=\"left\">${stud_am[0]}</td>
+        <td width="75" align="left">${stud_am[0]}</td>
         <td width="180"><a href="work.php?get=${row['id']}">${row['file_name']}</a>
 cData;
 			if (trim($row['comments'] != '')) {
