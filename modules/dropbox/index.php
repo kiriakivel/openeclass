@@ -37,6 +37,7 @@
  */
 
 require_once("dropbox_init1.inc.php");
+require_once('../../include/csrf_token.php');
 $nameTools = $dropbox_lang["dropbox"];
 
 /**** The following is added for statistics purposes ***/
@@ -210,7 +211,10 @@ tCont2;
     </tr>
     <tr>
       <th>&nbsp;</th>
-      <td><input type='Submit' name='submitWork' value='".$dropbox_lang["ok"]."' /></td>
+      <td>
+      	<input type='hidden' name='csrf_token' value='". generateToken('upload_work_form'). "'/>
+      	<input type='Submit' name='submitWork' value='".$dropbox_lang["ok"]."' />
+      </td>
     </tr>
     </tbody>
     </table>

@@ -36,6 +36,7 @@
  */
 
 require_once("dropbox_init1.inc.php");
+require_once('../../include/csrf_token.php');
 include "../../include/lib/forcedownload.php";
 $nameTools = $dropbox_lang["dropbox"];
 
@@ -83,8 +84,8 @@ require_once("dropbox_class.inc.php");
  * - VALIDATE POSTED DATA
  * - UPLOAD NEW FILE
  */
-if (isset($_POST["submitWork"]))
-{
+if (isset($_POST["submitWork"]) && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'upload_work_form' )) {
+
 	require("../../include/lib/fileUploadLib.inc.php");
 
 	$error = FALSE;
