@@ -24,7 +24,7 @@
 *                       eMail: info@openeclass.org
 * =========================================================================*/
 
-include '../../include/baseTheme.php';
+/*include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 require_once 'auth.inc.php';
 $nameTools = $langReqRegProf;
@@ -195,4 +195,4 @@ $registration_errors = array();
 
 } // end of submit
 
-draw($tool_content,0);
+draw($tool_content,0);*/
