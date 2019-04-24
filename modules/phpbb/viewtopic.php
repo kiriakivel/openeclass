@@ -86,7 +86,7 @@ if (isset($_GET['all'])) {
 
 $sql = "SELECT f.forum_type, f.forum_name
 	FROM forums f, topics t 
-	WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
+	WHERE (f.forum_id = '". escapeSimple($forum). "') AND (t.topic_id = '". escapeSimple($topic). "') AND (t.forum_id = f.forum_id)";
 if (!$result = db_query($sql, $currentCourseID)) {
 	$tool_content .= $langErrorConnectForumDatabase;
 	draw($tool_content, 2);
@@ -101,7 +101,7 @@ $forum_name = own_stripslashes($myrow["forum_name"]);
 
 $sql = "SELECT topic_title, topic_status
 	FROM topics 
-	WHERE topic_id = '$topic'";
+	WHERE topic_id = '". escapeSimple($topic). "'";
 
 $total = get_total_posts($topic, $currentCourseID, "topic");
 
@@ -211,18 +211,18 @@ cData;
 $topic = intval($_GET['topic']);
 if (isset($_GET['all'])) {
     $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
-		WHERE topic_id = '$topic' 
+		WHERE topic_id = '". escapeSimple($topic). "' 
 		AND p.post_id = pt.post_id
 		ORDER BY post_id";
 } elseif (isset($_GET['start'])) {
 	$start = intval($_GET['start']);
 	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
-		WHERE topic_id = '$topic' 
+		WHERE topic_id = '". escapeSimple($topic). "' 
 		AND p.post_id = pt.post_id
 		ORDER BY post_id LIMIT $start, $posts_per_page";
 } else {
 	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
-		WHERE topic_id = '$topic'
+		WHERE topic_id = '". escapeSimple($topic). "'
 		AND p.post_id = pt.post_id
 		ORDER BY post_id LIMIT $posts_per_page";
 }

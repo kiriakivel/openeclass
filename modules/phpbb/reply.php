@@ -75,18 +75,22 @@ hContent;
 include_once("./config.php");
 include("functions.php");
 
+$forum = escapeSimple($forum);
+$topic = escapeSimple($topic);
+
 if (isset($post_id) && $post_id) {
+	$post_id = escapeSimple($post_id);
 	// We have a post id, so include that in the checks..
 	$sql  = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
 	$sql .= "FROM forums f, topics t, posts p ";
-	$sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic)";
-	$sql .= " AND (p.post_id = $post_id) AND (t.forum_id = f.forum_id)";
+	$sql .= "WHERE (f.forum_id = '". escapeSimple($forum). "') AND (t.topic_id = '". escapeSimple($topic). "')";
+	$sql .= " AND (p.post_id = '". escapeSimple($post_id). "') AND (t.forum_id = f.forum_id)";
 	$sql .= " AND (p.forum_id = f.forum_id) AND (p.topic_id = t.topic_id)";
 } else {
 	// No post id, just check forum and topic.
 	$sql = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
 	$sql .= "FROM forums f, topics t ";
-	$sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";	
+	$sql .= "WHERE (f.forum_id = '". escapeSimple($forum). "') AND (t.topic_id = '". escapeSimple($topic). "') AND (t.forum_id = f.forum_id)";	
 }
 
 $result = db_query($sql, $currentCourseID);
@@ -195,8 +199,8 @@ if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $
 	$category_id = forum_category($forum);
 	$cat_name = category_name($category_id);
 	$sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
-			WHERE (topic_id = $topic OR forum_id = $forum OR cat_id = $category_id) 
-			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+			WHERE (topic_id = '". escapeSimple($topic). "' OR forum_id = '". escapeSimple($forum). "' OR cat_id = '". escapeSimple($category_id). "') 
+			AND notify_sent = 1 AND course_id = '". escapeSimple($cours_id). "'", $mysqlMainDb);
 	$c = course_code_to_title($currentCourseID);
 	$body_topic_notify = "$langCourse: '$c'\n\n$langBodyTopicNotify $langInForum '$topic_title' $langOfForum '$forum_name' $langInCat '$cat_name' \n\n$gunet";
 	while ($r = mysql_fetch_array($sql)) {
@@ -273,7 +277,7 @@ if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $
 	if (isset($quote) && $quote) {
 		$sql = "SELECT pt.post_text, p.post_time, u.username 
 			FROM posts p, posts_text pt 
-			WHERE p.post_id = '$post' AND pt.post_id = p.post_id";
+			WHERE p.post_id = '". escapeSimple($post). "' AND pt.post_id = p.post_id";
 		if ($r = db_query($sql, $currentCourseID)) {
 			$m = mysql_fetch_array($r);
 			$text = $m["post_text"];

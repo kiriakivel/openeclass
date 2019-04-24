@@ -79,7 +79,7 @@ include("functions.php"); // application logic for phpBB
  *****************************************************************************/
 if ($is_adminOfCourse) { // course admin 
 	if (isset($submit) && $submit) {
-		$sql = "SELECT * FROM posts WHERE post_id = '$post_id'";
+		$sql = "SELECT * FROM posts WHERE post_id = '". escapeSimple($post_id). "'";
 		if (!$result = db_query($sql, $currentCourseID)) {
 			$tool_content .= $langErrorDataOne;
 			draw($tool_content, 2, 'phpbb', $head_content);
@@ -97,9 +97,9 @@ if ($is_adminOfCourse) { // course admin
 		list($day, $time) = split(" ", $myrow["post_time"]);
 		$date = date("Y-m-d H:i");
 	
-		$row1 = mysql_fetch_row(db_query("SELECT forum_name FROM forums WHERE forum_id='$forum_id'"));
+		$row1 = mysql_fetch_row(db_query("SELECT forum_name FROM forums WHERE forum_id='". escapeSimple($forum_id). "'"));
 		$forum_name = $row1[0];
-		$row2 = mysql_fetch_row(db_query("SELECT topic_title FROM topics WHERE topic_id='$topic_id'"));
+		$row2 = mysql_fetch_row(db_query("SELECT topic_title FROM topics WHERE topic_id='". escapeSimple($topic_id). "'"));
 		$topic_title = $row2[0];
 	
 		$nameTools = $langReply;
@@ -216,7 +216,7 @@ if ($is_adminOfCourse) { // course admin
 		// Gotta handle private forums right here. They're naturally covered on submit, but not in this part.
 		$sql = "SELECT f.forum_type, f.forum_name, t.topic_title
 			FROM forums f, topics t
-			WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
+			WHERE (f.forum_id = '". escapeSimple($forum). "') AND (t.topic_id = '". escapeSimple($topic). "') AND (t.forum_id = f.forum_id)";
 		
 		if (!$result = db_query($sql, $currentCourseID)) {
 			$tool_content .= "$langTopicInformation";
@@ -275,7 +275,7 @@ if ($is_adminOfCourse) { // course admin
 		$sql = "SELECT p.*, pt.post_text, t.topic_title, t.topic_notify, 
 			       t.topic_title, t.topic_notify 
 			FROM posts p, topics t, posts_text pt 
-			WHERE (p.post_id = '$post_id') AND (pt.post_id = p.post_id) AND (p.topic_id = t.topic_id)";
+			WHERE (p.post_id = '". escapeSimple($post_id). "') AND (pt.post_id = p.post_id) AND (p.topic_id = t.topic_id)";
 
 		if (!$result = db_query($sql, $currentCourseID)) {
 			$tool_content .= "<p>Couldn't get user and topic information from the database.</p>";
