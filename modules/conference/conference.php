@@ -29,6 +29,7 @@ $require_help = TRUE;
 $helpTopic = 'Conference';
 $tool_content = "";
 include '../../include/baseTheme.php';
+require_once('../../include/csrf_token.php');
 
 if(!isset($MCU))
 	$MCU="";
@@ -97,6 +98,7 @@ $tool_content .= "
 
       <b>$langTypeMessage</b><br />
       <input type='text' name='msg' size='80'style='border: 1px solid #CAC3B5; background: #fbfbfb;'>
+      <input type='hidden' name='csrf_token' value='". generateToken('chat_form'). "'/>
       <input type='hidden' name='chatLine'>
       <input type='submit' value=' >> '>
 
