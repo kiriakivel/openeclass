@@ -98,7 +98,7 @@ if (isset($_GET['store']) && $is_adminOfCourse) {
 }
 
 // add new line
-if ((isset($chatLine) and trim($chatLine) != '')  && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'chat_form' )) {
+if ((isset($chatLine) && trim($chatLine) != '')  && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'chat_form' )) {
 	$fchat = fopen($fileChatName,'a');
 	$chatLine = mathfilter($chatLine, 12, '../../courses/mathimg/');
 	// escape special chars when writing the new line
