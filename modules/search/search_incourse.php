@@ -45,7 +45,7 @@ include '../../include/baseTheme.php';
 $nameTools = $langSearch;
 
 $tool_content = "";
-if(isset($_POST['search_terms'])) $search_terms = $_POST['search_terms'];
+if(isset($_POST['search_terms'])) $search_terms = htmlspecialchars($_POST['search_terms'], ENT_QUOTES, 'UTF-8');
 // ---------------------- Diasikasia domhshs tou query! -------------------------------
 // afto to kommati kwdika analyei tous orous anazhthshs kai tous metatrepei se gekimevmeno erwthma SQL
 // to erwthma periexetai sthn $query (den einai sthn telikh tou morfh alla xrhsimopoieitai san suffix parakatw)
