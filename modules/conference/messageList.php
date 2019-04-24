@@ -26,10 +26,8 @@
 
 $require_current_course = TRUE;
 include '../../include/baseTheme.php';
-require_once('../../include/csrf_token.php');
 
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <head>
 <meta http-equiv="refresh" content="30; url=<?= htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') ?>" />
 <title>Chat messages</title>
@@ -98,7 +96,7 @@ if (isset($_GET['store']) && $is_adminOfCourse) {
 }
 
 // add new line
-if ((isset($chatLine) && trim($chatLine) != '')  && !empty( $_POST['csrf_token'] ) && checkToken( $_POST['csrf_token'], 'chat_form' )) {
+if (isset($chatLine) and trim($chatLine) != '') {
 	$fchat = fopen($fileChatName,'a');
 	$chatLine = mathfilter($chatLine, 12, '../../courses/mathimg/');
 	// escape special chars when writing the new line
