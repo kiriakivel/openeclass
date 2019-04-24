@@ -81,12 +81,12 @@ if(!empty($auth)) {
         }
 }
 
-$tool_content .= "\n<br></td></tr><tr><td>&nbsp;</td></tr><tr>
+/*$tool_content .= "\n<br></td></tr><tr><td>&nbsp;</td></tr><tr>
 	<td><strong><font style='color: #a33033;'>".$langProfAccount." ".$langUserAccountInfo1."</font></strong></td>
 	</tr><tr><td>";
 
 if(!empty($auth)) {
-        /*$tool_content .= "<p><img style='border:0px;' src='${urlServer}/template/classic/img/arrow_grey.gif' title='bullet'>&nbsp;&nbsp;<a href=\"newprof.php\">$langNewAccount</a></p>";*/
+        $tool_content .= "<p><img style='border:0px;' src='${urlServer}/template/classic/img/arrow_grey.gif' title='bullet'>&nbsp;&nbsp;<a href=\"newprof.php\">$langNewAccount</a></p>";
         if (count($auth) > 1) {
                 $tool_content .= "<br><p><span style=\"border-bottom: 1px dotted silver;\">$langUserAccountInfo3</span>&nbsp;:</p>";
         }
@@ -102,7 +102,7 @@ if(!empty($auth)) {
         }
 } else {
         $tool_content .= "<p>$langCannotUseAuthMethods </p>";
-}
+}*/
 
 $tool_content .= "<br></td></tr></thead></table></td></tr></thead></table>";
 draw($tool_content, 0, 'auth');
