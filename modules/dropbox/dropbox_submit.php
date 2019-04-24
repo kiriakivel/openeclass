@@ -159,7 +159,7 @@ if (!isset( $_POST['authors']) || !isset( $_POST['description']))
 		{
 			$errormsg = $dropbox_lang["quotaError"];
 			$error = TRUE;
-		} elseif (!(preg_match('/(.*)\.(odt|doc|ppt|pdf|docx|zip|tar|txt|png|svg|jpeg|pptx)$/', $_FILES['userfile']['name'])))
+		} elseif (!(preg_match('/(.*)\.(odt|doc|ppt|pdf|docx|zip|tar|txt|png|svg|jpeg|pptx)$/', $dropbox_filename )))
 		{
 			$errormsg = $dropbox_lang["badFormData"];
 			$error = TRUE;
