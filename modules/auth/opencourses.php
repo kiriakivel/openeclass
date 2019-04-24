@@ -40,6 +40,7 @@ $navigation[] = array ("url" => "listfaculte.php", "name" => $langListFac);
 // parse the faculte id in a session
 // This is needed in case the user decides to switch language.
 if (isset($fc)) {
+    $fc = escapeSimple($fc);
     $_SESSION['fc_memo'] = $fc;
 }
 if (!isset($fc)) {
