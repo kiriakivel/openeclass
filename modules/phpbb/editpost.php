@@ -123,7 +123,7 @@ if ($is_adminOfCourse) { // course admin
 			$forward = 1;
 			$topic = $topic_id;
 			$forum = $forum_id;
-			$sql = "UPDATE posts_text SET post_text = " . autoquote($message) . " WHERE (post_id = '$post_id')";
+			$sql = "UPDATE posts_text SET post_text = " . autoquote($message) . " WHERE (post_id = '". escapeSimple($post_id). "')";
 			if (!$result = db_query($sql, $currentCourseID)) {
 				$tool_content .= $langUnableUpadatePost;
 				draw($tool_content, 2, 'phpbb', $head_content);
@@ -141,7 +141,7 @@ if ($is_adminOfCourse) { // course admin
 				$subject = addslashes($subject);
 				$sql = "UPDATE topics
 					SET topic_title = '$subject', topic_notify = '$notify'
-					WHERE topic_id = '$topic_id'";
+					WHERE topic_id = '". escapeSimple($topic_id). "'";
 				if (!$result = db_query($sql, $currentCourseID)) {
 					$tool_content .= $langUnableUpadateTopic;
 				}
@@ -179,7 +179,7 @@ if ($is_adminOfCourse) { // course admin
 				$topic_time_fixed = get_last_post($topic_id, $currentCourseID, "time_fix");
 				$sql = "UPDATE topics
 					SET topic_time = '$topic_time_fixed'
-					WHERE topic_id = '$topic_id'";
+					WHERE topic_id = '". escapeSimple($topic_id). "'";
 				if (!$r = db_query($sql, $currentCourseID)) {
 					$tool_content .= $langPostRemoved;
 					draw($tool_content, 2, 'phpbb', $head_content);

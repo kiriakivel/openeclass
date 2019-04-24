@@ -266,7 +266,7 @@ do {
 	$count++;
 } while($myrow = mysql_fetch_array($result));
 
-$sql = "UPDATE topics SET topic_views = topic_views + 1 WHERE topic_id = '$topic'";
+$sql = "UPDATE topics SET topic_views = topic_views + 1 WHERE topic_id = '". escapeSimple($topic). "'";
 db_query($sql, $currentCourseID);
 
 $tool_content .= "</tbody></table>";

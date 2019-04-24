@@ -172,7 +172,7 @@ if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $
 		$message .= "\n[addsig]";
 	}
 	$sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic', '$forum', '$uid','$time', '$poster_ip', '$nom', '$prenom')";
+			VALUES ('". escapeSimple($topic). "', '". escapeSimple($forum). "', '". escapeSimple($uid). "','$time', '$poster_ip', '$nom', '$prenom')";
 	$result = db_query($sql, $currentCourseID);
 	$this_post = mysql_insert_id();
 	if ($this_post) {
@@ -181,10 +181,10 @@ if (isset($submit) && $submit && !empty( $_POST['csrf_token'] ) && checkToken( $
 		$result = db_query($sql, $currentCourseID); 
 	}
 	$sql = "UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = $this_post, topic_time = '$time' 
-		WHERE topic_id = '$topic'";
+		WHERE topic_id = '". escapeSimple($topic). "'";
 	$result = db_query($sql, $currentCourseID);
 	$sql = "UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = '$this_post' 
-		WHERE forum_id = '$forum'";
+		WHERE forum_id = '". escapeSimple($forum). "'";
 	$result = db_query($sql, $currentCourseID);
 	if (!$result) {
 		$tool_content .= $langErrorUpadatePostCount;
