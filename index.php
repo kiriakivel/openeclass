@@ -206,7 +206,7 @@ if (isset($uid) AND !isset($logout)) {
 			//if the user is a guest send him straight to the corresponding lesson
 			$guestSQL = db_query("SELECT code FROM cours_user, cours
 				              WHERE cours.cours_id = cours_user.cours_id AND
-                                                    user_id = $uid", $mysqlMainDb);
+                                                    user_id = '". escapeSimple($uid). "'", $mysqlMainDb);
 			if (mysql_num_rows($guestSQL) > 0) {
 				$sql_row = mysql_fetch_row($guestSQL);
 				$dbname=$sql_row[0];

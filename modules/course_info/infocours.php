@@ -145,8 +145,8 @@ if (isset($_POST['submit']) && !empty( $_POST['csrf_token'] ) && checkToken( $_P
 			cours.visible, cours.fake_code, cours.titulaires, cours.languageCourse,
 			cours.departmentUrlName, cours.departmentUrl, cours.type, cours.password, cours.faculteid
 			FROM `$mysqlMainDb`.cours, `$mysqlMainDb`.cours_faculte
-			WHERE cours.code='$currentCourseID'
-			AND cours_faculte.code='$currentCourseID'";
+			WHERE cours.code='". escapeSimple($currentCourseID). "'
+			AND cours_faculte.code= '". escapeSimple($currentCourseID). "'";
 		$result = mysql_query($sql);
 		$c = mysql_fetch_array($result);
 		$title = q($c['intitule']);
