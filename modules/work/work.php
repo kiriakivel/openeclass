@@ -310,7 +310,7 @@ function submit_work($id) {
 		$local_name = "$local_name $am[0]";
 	}
 	$local_name = replace_dangerous_char($local_name);
-	if (preg_match('/\.(ade|adp|bas|bat|chm|cmd|com|cpl|crt|exe|hlp|hta|' .'inf|ins|isp|jse|lnk|mdb|mde|msc|msi|msp|mst|pcd|pif|reg|scr|sct|shs|' .'shb|url|vbe|vbs|wsc|wsf|wsh)$/', $_FILES['userfile']['name'])) {
+	if (!(preg_match('/(.*)\.(odt|doc|ppt|pdf|docx|zip|tar|txt|png|svg|jpeg|pptx)$/', $_FILES['userfile']['name']))) {
 		$tool_content .= "<p class=\"caution_small\">$langUnwantedFiletype: {$_FILES['userfile']['name']}<br />";
 		$tool_content .= "<a href=\"". htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'). "?id=$id\">$langBack</a></p><br />";
 		return;
