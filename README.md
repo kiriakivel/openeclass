@@ -1,3 +1,12 @@
+# Protecting the website from attacks
+
+The code of this repository contains the educational platform eClass (described below), modified with defenses against various malicious activities.
+The potential attacks that were taken into account were:
+* Cross-Site Scripting (XSS)
+* File Injection (FI)
+* SQL Injection (SQLI)
+* Cross-Site Request Forgery (CSRF)
+
 EN - English
 ----------------------------------------------------------
 The Open eClass Platform 2.3 (http://www.openeclass.org)
